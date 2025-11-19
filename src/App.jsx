@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
 import CampaignForm from './components/CampaignForm';
 import CampaignList from './components/CampaignList';
 import AdForm from './components/AdForm';
 import AdList from './components/AdList';
+import AnimatedSection from './components/AnimatedSection';
+import MetricCard from './components/MetricCard';
+import NeonGrid from './components/NeonGrid';
 
 function App() {
   const [campaigns, setCampaigns] = useState([]);
@@ -31,59 +35,60 @@ function App() {
       <Hero />
 
       <main className="relative -mt-16 z-20">
-        <div className="mx-auto max-w-7xl px-6 space-y-12">
-          <section id="campaigns" className="rounded-2xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl p-6 md:p-8 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl md:text-2xl font-semibold">Campaigns</h2>
-                <p className="text-slate-400 text-sm">Create and track performance across channels</p>
-              </div>
-            </div>
+        <div className="mx-auto max-w-7xl px-6 space-y-16">
 
+          <AnimatedSection id="campaigns" title="Campaigns" subtitle="Create and track performance across channels" accent="emerald">
             <CampaignForm onCreated={() => loadCampaigns()} />
-
             <div className="mt-8">
               <CampaignList />
             </div>
-          </section>
+          </AnimatedSection>
 
-          <section id="ads" className="rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl md:text-2xl font-semibold">Ads</h2>
-                <p className="text-slate-400 text-sm">Create creatives and placements</p>
-              </div>
+          <AnimatedSection
+            id="ads"
+            title="Ads"
+            subtitle="Create creatives and placements"
+            accent="fuchsia"
+            rightSlot={
               <select className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" value={selectedCampaign} onChange={(e)=>setSelectedCampaign(e.target.value)}>
                 {campaigns.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
               </select>
-            </div>
-
+            }
+          >
             <AdForm campaigns={campaigns} onCreated={() => {}} />
-
             <div className="mt-8">
               <AdList campaignId={selectedCampaign} />
             </div>
-          </section>
+          </AnimatedSection>
 
-          <section id="insights" className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl md:text-2xl font-semibold">Insights</h2>
-                <p className="text-slate-400 text-sm">Performance metrics coming next</p>
-              </div>
-              <div className="text-xs text-slate-400">Backend: {import.meta.env.VITE_BACKEND_URL}</div>
-            </div>
-
+          <AnimatedSection id="insights" title="Insights" subtitle="Performance metrics coming next" accent="blue">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-4">Impressions</div>
-              <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-4">Clicks</div>
-              <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-4">Spend</div>
+              <MetricCard label="Impressions" value="—" delta="+0%" color="blue" />
+              <MetricCard label="Clicks" value="—" delta="+0%" color="fuchsia" />
+              <MetricCard label="Spend" value="$0" delta="0%" color="emerald" />
             </div>
-          </section>
+            <div className="mt-8">
+              <NeonGrid />
+            </div>
+            <div className="mt-6 text-xs text-slate-400">Backend: {import.meta.env.VITE_BACKEND_URL}</div>
+          </AnimatedSection>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-center"
+          >
+            <a href="#top" className="inline-flex items-center gap-2 rounded-full bg-white/5 ring-1 ring-white/10 px-4 py-2 text-xs text-slate-300 hover:bg-white/10 transition-colors">
+              Back to top
+            </a>
+          </motion.div>
+
         </div>
       </main>
 
-      <footer className="py-10 text-center text-slate-500 text-sm">
+      <footer className="py-12 text-center text-slate-500 text-sm">
         Built for performance marketers
       </footer>
     </div>
